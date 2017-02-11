@@ -25,7 +25,7 @@ public class MouseDispatcher extends MouseAdapter {
 		
 		if (e.getModifiers()==InputEvent.BUTTON1_MASK){
 			JButton b = (JButton)e.getComponent();
-			if ("(START)".equals(b.getText())){
+			if ("START".equals(b.getText())){
 				logic.createInitialCells();
 			} else {
 				logic.reBack();

@@ -5,13 +5,13 @@ import java.util.Random;
 import javax.swing.JOptionPane;
 
 public class Logic {
+//	public int score = 2; // Сумма всех чисел на поле
 	private Gamezona gamezona;
-	boolean endGame = false;
+	public int score = 0, oldscore = 0;
 
 	// Создание массива интов (в нём происходит логика игры)
 	private int[][] theField = new int[Constants.COUNT_CELLS_X][Constants.COUNT_CELLS_Y];
 	private int[][] oldField = new int[Constants.COUNT_CELLS_X][Constants.COUNT_CELLS_Y];
-	
 
 	public Logic(Gamezona gamezona) {
 		super();
@@ -34,7 +34,7 @@ public class Logic {
 		for (int i = 0; i < Constants.COUNT_INITITAL_CELLS; i++) {
 			generateNewCell();
 		}
-		gamezona.refresh(theField);
+		gamezona.refresh(theField, score);
 
 	}
 
@@ -64,7 +64,8 @@ public class Logic {
 		boolean rif = false;
 		int[][] tempField = new int[Constants.COUNT_CELLS_X][Constants.COUNT_CELLS_Y];
 		arrayCopy(theField, tempField);
-
+		
+		int tempscore = score;
 		switch (sdvig) {
 		case RIGHT:
 			for (int i = 3; i >= 0; i--) {
@@ -72,6 +73,7 @@ public class Logic {
 				while (j >= 0) {
 					if (theField[i][j] == 0) {
 						j--;
+
 					} else {
 						if (j != k) {
 							if (theField[i][k] == 0) {
@@ -81,6 +83,7 @@ public class Logic {
 							} else {
 								if (theField[i][j] == theField[i][k]) {
 									theField[i][k] = theField[i][k] * 2;
+									score = score + theField[i][k];
 									rif = true;
 									theField[i][j] = 0;
 									k--;
@@ -117,6 +120,7 @@ public class Logic {
 							} else {
 								if (theField[i][j] == theField[i][k]) {
 									theField[i][k] = theField[i][k] * 2;
+									score = score + theField[i][k];
 									rif = true;
 									theField[i][j] = 0;
 									k++;
@@ -153,6 +157,7 @@ public class Logic {
 							} else {
 								if (theField[j][i] == theField[k][i]) {
 									theField[k][i] = theField[k][i] * 2;
+									score = score + theField[k][i];
 									rif = true;
 									theField[j][i] = 0;
 									k--;
@@ -189,6 +194,7 @@ public class Logic {
 							} else {
 								if (theField[j][i] == theField[k][i]) {
 									theField[k][i] = theField[k][i] * 2;
+									score = score + theField[k][i];
 									rif = true;
 									theField[j][i] = 0;
 									k++;
@@ -213,12 +219,41 @@ public class Logic {
 
 		}
 		if (rif) {
-			arrayCopy(tempField,oldField );
+			arrayCopy(tempField, oldField);
 			generateNewCell();
-			
+			oldscore = tempscore;
+
 		}
 
-		gamezona.refresh(theField);
+		gamezona.refresh(theField,score);
+
+		
+
+		if (proverkaEnd()) {
+           
+			JOptionPane.showMessageDialog(null, "You lose!!!", "Game over!!" + " " + "your score = " + " " + score,
+					JOptionPane.INFORMATION_MESSAGE);
+		}
+
+	}
+
+	private boolean proverkaEnd() {
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if (theField[i][j] == 0) {
+					return false;
+				}
+				if (j < 3) {
+					if (theField[i][j] == theField[i][j + 1]) {
+						return false;
+					}
+					if (theField[j][i] == theField[j + 1][i]) {
+						return false;
+					}
+				}
+			}
+		}
+		return true;
 	}
 
 	// private Direction shiftProv(Direction sdvigProv) {
@@ -241,7 +276,7 @@ public class Logic {
 		theField[3][2] = 8;
 		theField[3][3] = 16;
 
-		gamezona.refresh(theField);
+		gamezona.refresh(theField, score);
 	}
 
 	private void arrayCopy(int[][] source, int[][] destination) {
@@ -255,7 +290,8 @@ public class Logic {
 
 	public void reBack() {
 		arrayCopy(oldField, theField);
-		gamezona.refresh(theField);
+		score = oldscore;
+		gamezona.refresh(theField, score);
 
 	}
 }
