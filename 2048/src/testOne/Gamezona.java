@@ -17,6 +17,7 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 
 public class Gamezona {
 	private JLabel[][] gameField = new JLabel[Constants.COUNT_CELLS_X][Constants.COUNT_CELLS_Y];
@@ -162,9 +163,12 @@ public class Gamezona {
 		labelScoreTop.setText(Integer.toString(scoreTop));
 		// newJ.requestFocus();
 	}
-	public void MovingCircle(){
-		
-	}
+//	  public void MovingCircle(Color color, int delay) {
+//		    scale = 1.0;
+//		    timer = new Timer(delay, this);
+//		    this.color = color;
+//		    setPreferredSize(new Dimension(500, 500));
+//		  }
 
 	private void setColors(JLabel label, int number) {
 		switch (number) {
