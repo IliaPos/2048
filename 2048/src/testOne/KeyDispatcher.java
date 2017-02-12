@@ -31,9 +31,12 @@ public class KeyDispatcher implements KeyEventDispatcher {
 				int keyCode = e.getKeyCode();
 				switch (keyCode) {
 				case KeyEvent.VK_UP:
+//					logic.readerScoreTop();
 					logic.shift(Direction.UP);
+				
 					break;
 				case KeyEvent.VK_DOWN:
+//					logic.writerScoreTop();
 					logic.shift(Direction.DOWN);
 					break;
 				case KeyEvent.VK_LEFT:
@@ -43,6 +46,8 @@ public class KeyDispatcher implements KeyEventDispatcher {
 					logic.shift(Direction.RIGHT);
 
 					break;
+				case KeyEvent.VK_N:
+					logic.resetScoreTop();
 				}
 			}
 			

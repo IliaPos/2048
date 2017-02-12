@@ -5,37 +5,36 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.FlowLayout;
 import java.awt.Font;
-import java.awt.GraphicsDevice;
 import java.awt.GridLayout;
-import java.awt.Image;
 import java.awt.KeyboardFocusManager;
 import java.awt.Toolkit;
+import java.util.Properties;
 
 import javax.swing.BorderFactory;
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
 
 public class Gamezona {
 	private JLabel[][] gameField = new JLabel[Constants.COUNT_CELLS_X][Constants.COUNT_CELLS_Y];
 	JLabel labelScore;
-
+	JLabel labelScoreTop;
 	private final Logic logic = new Logic(this);
 	JFrame newJ;
 
 	private void init() {
-		newJ = new JFrame("2048 (alpha version 0.1.1)");
+		newJ = new JFrame("DTSV (alpha version 0.2.2)");
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.addKeyEventDispatcher(new KeyDispatcher(this.logic, newJ));
 
 		newJ.setIconImage(Toolkit.getDefaultToolkit().getImage(getClass().getClassLoader().getResource("2048r.PNG")));
 		newJ.setSize(700, 700);
-		// newJ.setResizable(false);
+        newJ.setResizable(false);
 
-		// newJ.setVisible(true);
+//		 newJ.setVisible(true);
 
 		newJ.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 		// newJ.setLayout(new BorderLayout(1,1));
@@ -44,24 +43,28 @@ public class Gamezona {
 		JPanel jpBroardM = new JPanel(new BorderLayout());
 
 		JPanel jpNorth = new JPanel(new FlowLayout());
+		jpNorth.setBackground(new Color(191,239	,255));
 		jpNorth.setPreferredSize(new Dimension(100, 100));
+		
 		JLabel pustotaLeft = new JLabel(" ");
 		pustotaLeft.setPreferredSize(new Dimension(0, 70));
 		jpNorth.add(pustotaLeft);
 
 		JButton buttonStart = new JButton("START");
-		buttonStart.setBackground(Color.WHITE);
+		buttonStart.setForeground(Color.WHITE);
+		buttonStart.setBackground(new Color(238,106,80));
 		buttonStart.addMouseListener(new MouseDispatcher(this.logic));
 		jpNorth.add(buttonStart);
 		
 	
 
-		JButton back = new JButton("Back");
-		back.setBackground(Color.WHITE);
+		JButton back = new JButton("BACK");
+		back.setForeground(Color.WHITE);
+		back.setBackground(new Color(238,106,80));
 		back.addMouseListener(new MouseDispatcher(this.logic));
 		jpNorth.add(back);
 		
-		JLabel pustotaRight = new JLabel(" ");
+		JLabel pustotaRight = new JLabel("   Score: ");
 		pustotaRight.setPreferredSize(new Dimension(50, 10));
 		jpNorth.add(pustotaRight);
 
@@ -71,15 +74,34 @@ public class Gamezona {
 		labelScore.setFont(srift);
 		jpNorth.add(labelScore);
 		jpBroardM.add(jpNorth, BorderLayout.NORTH);
+		
+		JLabel pustotaRightRight = new JLabel("                Record: ");
+		pustotaRightRight.setPreferredSize(new Dimension(100, 10));
+		jpNorth.add(pustotaRightRight);
+		
+		Font sriftTop = new Font(Font.DIALOG, Font.BOLD, 27);
+		Integer currentTopScore = logic.readerScoreTop();
+		labelScoreTop = new JLabel(currentTopScore.toString());
+		labelScoreTop.setFont(sriftTop);
+		jpNorth.add(labelScoreTop);
+		jpBroardM.add(jpNorth, BorderLayout.NORTH);
 
 		JPanel jpSouth = new JPanel();
-		// jpSouth.setBackground(Color.GREEN);
+		jpSouth.setBackground(new Color(191,239	,255));
+		
 		jpSouth.setPreferredSize(new Dimension(100, 100));
 		jpBroardM.add(jpSouth, BorderLayout.SOUTH);
+		
+		JLabel pustotaSouth = new JLabel("To clear the record, click: \"n\" ");
+		jpSouth.add(pustotaSouth);
+		
 		JPanel jpWest = new JPanel();
+		jpWest.setBackground(new Color(191,239	,255));
 		jpWest.setPreferredSize(new Dimension(100, 100));
 		jpBroardM.add(jpWest, BorderLayout.WEST);
+		
 		JPanel jpEast = new JPanel();
+		jpEast.setBackground(new Color(191,239	,255));
 		jpEast.setPreferredSize(new Dimension(100, 100));
 		jpBroardM.add(jpEast, BorderLayout.EAST);
 		JPanel jpBroard = new JPanel(new GridLayout(Constants.COUNT_CELLS_X, Constants.COUNT_CELLS_Y));
@@ -103,8 +125,7 @@ public class Gamezona {
 		jpBroardM.add(jpBroard, BorderLayout.CENTER);
 		// jpBroard.add(gameField);
 
-		// Canvas canv = new Canvas();
-		// newJ.add(canv);
+
 		newJ.add(jpBroardM);
 		newJ.setLocation(290, 50);
 		newJ.setVisible(true);
@@ -116,10 +137,14 @@ public class Gamezona {
 	public static void main(String[] args) {
 		Gamezona gameZona = new Gamezona();
 		gameZona.init();
+//		Properties p = System.getProperties();
+//		p.list(System.out);
+		
 
 	}
 
-	public void refresh(int theField[][], int score) {
+	public void refresh(int theField[][], int score, int scoreTop) {
+//		System.out.println(scoreTop);
 		for (int i = 0; i < 4; i++) {
 			for (int s = 0; s < 4; s++) {
 				if (theField[i][s] == 0) {
@@ -133,6 +158,7 @@ public class Gamezona {
 			}
 		}
 		labelScore.setText(Integer.toString(score));
+		labelScoreTop.setText(Integer.toString(scoreTop));
 		// newJ.requestFocus();
 	}
 

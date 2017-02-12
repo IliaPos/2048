@@ -14,8 +14,7 @@ public class Constants {
 		
 	 public static final int SCREEN_WIDTH = COUNT_CELLS_X *CELL_SIZE;
 	 public static final int SCREEN_HEIGHT = COUNT_CELLS_Y *CELL_SIZE;
-//	 public static final String SCREEN_NAME = "Tproger's 2048";
-	
+
 	 public static final int CHANCE_OF_LUCKY_SPAWN = 17; //%
 
 	 public static final int LUCKY_INITIAL_CELL_STATE = 4;
@@ -26,5 +25,6 @@ public class Constants {
 
 	 public static final int COUNT_INITITAL_CELLS = 2;
 	 public static final String SCREEN_NAME = "game2048";
+	 
 
 }

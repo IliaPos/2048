@@ -1,21 +1,33 @@
 package testOne;
 
+import java.io.BufferedReader;
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileWriter;
+import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 import javax.swing.JOptionPane;
 
 public class Logic {
-//	public int score = 2; // Сумма всех чисел на поле
-	private Gamezona gamezona;
-	public int score = 0, oldscore = 0;
 
+	private Gamezona gamezona;
+	public int score = 0, oldscore = 0, scoreTop = 0, oldScoreTop = 0;
+	String path = System.getProperty("user.dir");
 	// Создание массива интов (в нём происходит логика игры)
 	private int[][] theField = new int[Constants.COUNT_CELLS_X][Constants.COUNT_CELLS_Y];
+	// Создания массива интов для reset
 	private int[][] oldField = new int[Constants.COUNT_CELLS_X][Constants.COUNT_CELLS_Y];
 
 	public Logic(Gamezona gamezona) {
 		super();
 		this.gamezona = gamezona;
+		this.scoreTop = readerScoreTop();
+		
 
 	}
 
@@ -24,8 +36,10 @@ public class Logic {
 		for (int i = 0; i < Constants.COUNT_CELLS_X; i++) {
 			for (int s = 0; s < Constants.COUNT_CELLS_Y; s++) {
 				theField[i][s] = 0;
+
 			}
 		}
+		score = 0;
 	}
 
 	// Метод создаёт в начале игры 2 рандомные плитки.
@@ -34,7 +48,58 @@ public class Logic {
 		for (int i = 0; i < Constants.COUNT_INITITAL_CELLS; i++) {
 			generateNewCell();
 		}
-		gamezona.refresh(theField, score);
+		gamezona.refresh(theField, score, scoreTop);
+
+	}
+
+	public void writerScoreTop() {
+		try (FileWriter writer = new FileWriter(path + "/records.dat", false)) {
+			// запись всей строки
+			String text = Integer.toString(scoreTop);
+			writer.write(text);
+			// // запись по символам
+			// writer.append('\n');
+			// writer.append('E');
+			//
+			writer.flush();
+		} catch (IOException ex) {
+			System.out.println(ex.getMessage());
+		}
+	}
+
+	public Integer readerScoreTop() {
+		File file = new File(path + "/records.dat");
+		BufferedReader br = null;
+
+		try {
+			if (file.exists() && !file.isDirectory()) {
+				InputStream in = new FileInputStream(file);
+				br = new BufferedReader(new InputStreamReader(in));
+				List<String> lines = new ArrayList<String>();
+				String line = null;
+				while ((line = br.readLine()) != null) {
+					lines.add(line);
+				}
+				if (!lines.isEmpty()) {
+					return Integer.parseInt(lines.get(0));
+				}
+
+			}
+			return 0;
+		} catch (Exception e) {
+			e.printStackTrace();
+			return 0;
+		} finally {
+			if (br != null) {
+				try {
+					br.close();
+
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+			}
+
+		}
 
 	}
 
@@ -64,8 +129,9 @@ public class Logic {
 		boolean rif = false;
 		int[][] tempField = new int[Constants.COUNT_CELLS_X][Constants.COUNT_CELLS_Y];
 		arrayCopy(theField, tempField);
-		
+
 		int tempscore = score;
+		int tempscoreTop = scoreTop;
 		switch (sdvig) {
 		case RIGHT:
 			for (int i = 3; i >= 0; i--) {
@@ -222,15 +288,18 @@ public class Logic {
 			arrayCopy(tempField, oldField);
 			generateNewCell();
 			oldscore = tempscore;
+			oldScoreTop = tempscoreTop;
+			if (score > scoreTop) {
+				scoreTop = score;
+				writerScoreTop();
+			}
 
 		}
 
-		gamezona.refresh(theField,score);
-
-		
+		gamezona.refresh(theField, score, scoreTop);
 
 		if (proverkaEnd()) {
-           
+
 			JOptionPane.showMessageDialog(null, "You lose!!!", "Game over!!" + " " + "your score = " + " " + score,
 					JOptionPane.INFORMATION_MESSAGE);
 		}
@@ -256,29 +325,6 @@ public class Logic {
 		return true;
 	}
 
-	// private Direction shiftProv(Direction sdvigProv) {
-	int automatic = 0;
-
-	public void createCellTest() {
-		clearField();
-		theField[0][0] = 4;
-		theField[0][1] = 4;
-		// theField[0][2] = 2;
-		// theField[0][3] = 2;
-		theField[1][1] = 2;
-		theField[1][3] = 2;
-		theField[2][0] = 4;
-		theField[2][1] = 4;
-		theField[2][2] = 4;
-		theField[2][3] = 8;
-		theField[3][0] = 2;
-		theField[3][1] = 2;
-		theField[3][2] = 8;
-		theField[3][3] = 16;
-
-		gamezona.refresh(theField, score);
-	}
-
 	private void arrayCopy(int[][] source, int[][] destination) {
 		for (int i = 0; i < 4; i++) {
 			for (int s = 0; s < 4; s++) {
@@ -291,7 +337,16 @@ public class Logic {
 	public void reBack() {
 		arrayCopy(oldField, theField);
 		score = oldscore;
-		gamezona.refresh(theField, score);
+		scoreTop = oldScoreTop;
+		gamezona.refresh(theField, score, scoreTop);
 
 	}
+
+	public void resetScoreTop() {
+		scoreTop = 0;
+		writerScoreTop();
+		gamezona.refresh(theField, score, scoreTop);
+		
+	}
+
 }
