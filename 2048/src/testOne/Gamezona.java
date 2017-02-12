@@ -26,7 +26,7 @@ public class Gamezona {
 	JFrame newJ;
 
 	private void init() {
-		newJ = new JFrame("DTSV (alpha version 0.2.2)");
+		newJ = new JFrame("DTSV (alpha version 0.2.3)");
 		KeyboardFocusManager.getCurrentKeyboardFocusManager()
 				.addKeyEventDispatcher(new KeyDispatcher(this.logic, newJ));
 
@@ -65,6 +65,7 @@ public class Gamezona {
 		jpNorth.add(back);
 		
 		JLabel pustotaRight = new JLabel("   Score: ");
+		pustotaRight.setBackground(new Color(197,	193,	170) );
 		pustotaRight.setPreferredSize(new Dimension(50, 10));
 		jpNorth.add(pustotaRight);
 
@@ -160,6 +161,9 @@ public class Gamezona {
 		labelScore.setText(Integer.toString(score));
 		labelScoreTop.setText(Integer.toString(scoreTop));
 		// newJ.requestFocus();
+	}
+	public void MovingCircle(){
+		
 	}
 
 	private void setColors(JLabel label, int number) {

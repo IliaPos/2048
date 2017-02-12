@@ -24,7 +24,7 @@ public class Constants {
 	 public static final Font FONT_SMALL_SMALL = new Font(Font.DIALOG, Font.BOLD, 35 );
 
 	 public static final int COUNT_INITITAL_CELLS = 2;
-	 public static final String SCREEN_NAME = "game2048";
+//	 public static final String SCREEN_NAME = "game2048";
 	 
 
 }

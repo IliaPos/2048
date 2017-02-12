@@ -22,7 +22,7 @@ public class KeyDispatcher implements KeyEventDispatcher {
 //				JOptionPane.INFORMATION_MESSAGE);
 		if (e.getComponent().equals(this.comp) || 
 				((JButton)e.getComponent()).getText().equals("START")|| 
-				((JButton)e.getComponent()).getText().equals("Back")) {
+				((JButton)e.getComponent()).getText().equals("BACK")) {
 			
 		
 	

@@ -16,7 +16,10 @@ import javax.swing.JOptionPane;
 public class Logic {
 
 	private Gamezona gamezona;
+	private boolean won = false;
+	private boolean oldWon = false;
 	public int score = 0, oldscore = 0, scoreTop = 0, oldScoreTop = 0;
+	
 	String path = System.getProperty("user.dir");
 	// Создание массива интов (в нём происходит логика игры)
 	private int[][] theField = new int[Constants.COUNT_CELLS_X][Constants.COUNT_CELLS_Y];
@@ -27,7 +30,6 @@ public class Logic {
 		super();
 		this.gamezona = gamezona;
 		this.scoreTop = readerScoreTop();
-		
 
 	}
 
@@ -49,6 +51,7 @@ public class Logic {
 			generateNewCell();
 		}
 		gamezona.refresh(theField, score, scoreTop);
+		this.won = false;
 
 	}
 
@@ -293,16 +296,22 @@ public class Logic {
 				scoreTop = score;
 				writerScoreTop();
 			}
+			gamezona.refresh(theField, score, scoreTop);
 
+			if (proverkaEnd()) {
+
+				JOptionPane.showMessageDialog(null, "your score = " + " " + score, "Game over!!" + " ",
+						JOptionPane.INFORMATION_MESSAGE);
+
+			}
+			oldWon = won;
+			if (!won && proverkaWin()) {
+				JOptionPane.showMessageDialog(null, "Click \"OK\" to continue ", "You won!!" + " ",
+						JOptionPane.INFORMATION_MESSAGE);
+			}
 		}
 
-		gamezona.refresh(theField, score, scoreTop);
-
-		if (proverkaEnd()) {
-
-			JOptionPane.showMessageDialog(null, "You lose!!!", "Game over!!" + " " + "your score = " + " " + score,
-					JOptionPane.INFORMATION_MESSAGE);
-		}
+		
 
 	}
 
@@ -325,6 +334,32 @@ public class Logic {
 		return true;
 	}
 
+	private boolean proverkaWin(){
+		
+		
+		for (int i = 0; i < 4; i++) {
+			for (int j = 0; j < 4; j++) {
+				if ( theField[i][j] == 2048){
+					this.won = true;
+					return true;
+					
+				}
+				if (theField[j][i] == 2048){
+					this.won = true;
+					return true;
+				}
+			}
+		
+		
+	}
+		
+		return false;
+		
+	}
+		
+		
+//	}
+
 	private void arrayCopy(int[][] source, int[][] destination) {
 		for (int i = 0; i < 4; i++) {
 			for (int s = 0; s < 4; s++) {
@@ -338,7 +373,9 @@ public class Logic {
 		arrayCopy(oldField, theField);
 		score = oldscore;
 		scoreTop = oldScoreTop;
+		won = oldWon;
 		gamezona.refresh(theField, score, scoreTop);
+		
 
 	}
 
@@ -346,7 +383,7 @@ public class Logic {
 		scoreTop = 0;
 		writerScoreTop();
 		gamezona.refresh(theField, score, scoreTop);
-		
+
 	}
 
 }
